@@ -1,0 +1,95 @@
+contract UniVote =
+  
+    
+  record candidate = 
+    {
+    id : int,
+    creatorAddress : address,
+    image1 : string,
+    image2 : string,
+    image3 : string,
+    name : string,
+    description : string,
+    amount : int,
+    voteCount : int,
+    timestamp : int
+    }
+    
+  record state = {
+    candidates : map(int, candidate),
+    candidateLength : int}
+    
+  entrypoint init() = { 
+    candidates = {},
+    candidateLength = 0}
+
+  
+  entrypoint getCandidate(index : int) : candidate = 
+    switch(Map.lookup(index, state.candidates))
+      None => abort("Candidate does not exist with this index")
+      Some(x) => x  
+    
+    
+    //Registers a candidate
+    
+  payable stateful entrypoint createCandidate( image1' : string, image2' : string, image3' : string, name' : string, description' : string) = 
+    let timestamp = Chain.timestamp
+    let candidateReg = {
+      id = getCandidateLength()+1,
+      creatorAddress  = Call.caller,
+      image1 = image1',
+      image2 = image2',
+      image3 = image3',
+      name = name', 
+      description = description',
+      amount = 40000,
+      timestamp = timestamp,
+      voteCount = 0
+      
+      }
+    Chain.spend(ak_2CPHkUq31gjkv7mr6Yc8puQVZhu16YQYZ5hAZiTV43BRPqLAZv, candidateReg.amount)
+    
+    
+      
+    let index = getCandidateLength() + 1
+    put(state{candidates[index] = candidateReg, candidateLength = index})
+    
+    
+    //returns lenght of candidates registered
+  entrypoint getCandidateLength() : int = 
+    state.candidateLength
+    
+  //returns number of votes
+    
+  entrypoint getVoteCount(index : int) = 
+    state.candidates[index].voteCount 
+    
+    //vote a candidate
+    
+  entrypoint getId(index : int) = 
+      state.candidates[index].id
+      
+      
+  stateful entrypoint vote(index : int) = 
+    let person = getCandidate(index)
+    let votePerson = {
+      id = person.id,
+      creatorAddress  = person.creatorAddress,
+      image1 = person.image1,
+      image2 = person.image2,
+      image3 = person.image3,
+      name = person.name, 
+      description = person.description,
+      amount = 40000,
+      timestamp = person.timestamp,
+      voteCount = person.voteCount+1
+      
+    
+      }
+    
+    
+    
+    put(state{candidates[index] = votePerson})
+  
+    
+    "LIfe Hack has BEEN voted SUCCESSFULLY"
