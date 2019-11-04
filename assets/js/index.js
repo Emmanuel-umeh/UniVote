@@ -131,14 +131,14 @@ async function callStatic(func, args) {
     contractAddress
   });
   //Make a call to get data of smart contract func, with specefied arguments
-  console.log("Contract : ", contract)
+  
   const calledGet = await contract.call(func, args, {
     callStatic: true
   }).catch(e => console.error(e));
   //Make another call to decode the data received in first call
-  console.log("Called get found: ", calledGet)
+ 
   const decodedGet = await calledGet.decode().catch(e => console.error(e));
-  console.log("catching errors : ", decodedGet)
+  
   return decodedGet;
 }
 
@@ -165,11 +165,9 @@ window.addEventListener('load', async () => {
   for (let i = 1; i <= CandidateLength; i++) {
     const persons = await callStatic('getCandidate', [i]);
 
-    console.log("for loop reached", "pushing to array")
+    console.log("Calling the snart contract")
 
-    console.log(persons.name)
-    console.log(persons.description)
-    console.log(persons.image1)
+ 
 
 
     CandidateArray.push({
@@ -232,14 +230,10 @@ $('.regBtn').click(async function(){
   const candidate_image2 = ($("#Candidateimage2").val());
   const candidate_image3 = ($("#Candidateimage3").val());
   const candidate_description = ($("#Candidatemessage").val());
-  console.log("-------------------------------------")
-  console.log("Name:",candidate_name)
-  console.log("image1:",candidate_image1)
-  console.log("Image2:",candidate_image2)
-  console.log("Image3:",candidate_image3)
+  
 
   const new_candidate = await contractCall('createCandidate', [candidate_image1, candidate_image2, candidate_image3,candidate_name,candidate_description],40000);
-  console.log("SAVED TO THE DB", new_candidate)
+
 
   CandidateArray.push({
     id: new_candidate.id,
@@ -251,22 +245,13 @@ $('.regBtn').click(async function(){
     description: new_candidate.description,
     voteCount: new_candidate.voteCount
   })
+  
+  console.log("registered successfully")
 
 
   renderProductList();
   
-    //This will clear the value in all scenarious
-    var name_input = document.getElementById("name")
-        name_input.value =""
-    var image_input = document.getElementById("image1")
-        url_input.value =""
-    var image_input = document.getElementById("image2")
-       image_input.value = ""
-    var image_input = document.getElementById("image3")
-       image_input.value = ""
-    var image_input = document.getElementById("message")
-       image_input.value = ""
-  // e.preventDefault();
+   
 
   $("#loading-bar-spinner").hide();
   location.reload(true)
