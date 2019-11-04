@@ -179,7 +179,7 @@ window.addEventListener('load', async () => {
       name: persons.name,
       description: persons.description,
       voteCount: persons.voteCount,
-      timestamp : new Date(new_candidate.timestamp)
+      timestamp : new Date(persons.timestamp)
     })
 
     // vote
