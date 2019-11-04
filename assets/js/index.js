@@ -178,7 +178,8 @@ window.addEventListener('load', async () => {
 
       name: persons.name,
       description: persons.description,
-      voteCount: persons.voteCount
+      voteCount: persons.voteCount,
+      timestamp : new Date(new_candidate.timestamp)
     })
 
     // vote
@@ -243,7 +244,8 @@ $('.regBtn').click(async function(){
 
     name: new_candidate.name,
     description: new_candidate.description,
-    voteCount: new_candidate.voteCount
+    voteCount: new_candidate.voteCount,
+    timestamp : new Date(new_candidate.timestamp)
   })
   
   console.log("registered successfully")
