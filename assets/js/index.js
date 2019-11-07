@@ -12,8 +12,7 @@ contract UniVote =
     name : string,
     description : string,
     amount : int,
-    voteCount : int,
-    timestamp : int
+    voteCount : int
     }
     
   record state = {
@@ -44,7 +43,6 @@ contract UniVote =
       name = name', 
       description = description',
       amount = 40000,
-      timestamp = timestamp,
       voteCount = 0
       
       }
@@ -56,20 +54,17 @@ contract UniVote =
     put(state{candidates[index] = candidateReg, candidateLength = index})
     
     
-    //returns lenght of candidates registered
+                                  //returns lenght of candidates registered
+ 
   entrypoint getCandidateLength() : int = 
     state.candidateLength
     
-  //returns number of votes
+                                  //returns number of votes
     
   entrypoint getVoteCount(index : int) = 
     state.candidates[index].voteCount 
     
-    //vote a candidate
-    
-  entrypoint getId(index : int) = 
-      state.candidates[index].id
-      
+                                  //vote a candidate
       
   stateful entrypoint vote(index : int) = 
     let person = getCandidate(index)
@@ -82,7 +77,6 @@ contract UniVote =
       name = person.name, 
       description = person.description,
       amount = 40000,
-      timestamp = person.timestamp,
       voteCount = person.voteCount+1
       
     
@@ -93,14 +87,12 @@ contract UniVote =
     put(state{candidates[index] = votePerson})
   
     
-    "LIfe Hack has BEEN voted SUCCESSFULLY"
-  
-    
+    "VOTED SUCCESSFULLY"
   
     `;
 
 
-const contractAddress = 'ct_2oWDCSeqm8iEBe7n6tqdxDQDxEHKm6eAdhScZXzto7kuEtH5VS';
+const contractAddress = 'ct_QYAjM2eRdNd2PSny1Co9YMTnrGUgwZSShtNhzbV4FeX7cJbt5';
 var CandidateArray = [];
 var client = null;
 var CanndidateLength = 0;
@@ -122,7 +114,7 @@ function renderProduct() {
 
 
   $('#body').html(rendered);
-  console.log("for loop reached")
+  
 }
 //Create a asynchronous read call for our smart contract
 async function callStatic(func, args) {
@@ -130,15 +122,13 @@ async function callStatic(func, args) {
   const contract = await client.getContractInstance(contractSource, {
     contractAddress
   });
-  //Make a call to get data of smart contract func, with specefied arguments
   
   const calledGet = await contract.call(func, args, {
     callStatic: true
   }).catch(e => console.error(e));
-  //Make another call to decode the data received in first call
  
   const decodedGet = await calledGet.decode().catch(e => console.error(e));
-  
+  console.log("number of posts : ", decodedGet)
   return decodedGet;
 }
 
@@ -154,6 +144,8 @@ async function contractCall(func, args, value) {
   return calledSet;
 }
 
+// reading from the blockchain and rendering it
+
 window.addEventListener('load', async () => {
   $("#loading-bar-spinner").show();
 
@@ -165,10 +157,7 @@ window.addEventListener('load', async () => {
   for (let i = 1; i <= CandidateLength; i++) {
     const persons = await callStatic('getCandidate', [i]);
 
-    console.log("Calling the snart contract")
-
- 
-
+    console.log("calling contract")
 
     CandidateArray.push({
       id: persons.id,
@@ -178,40 +167,28 @@ window.addEventListener('load', async () => {
 
       name: persons.name,
       description: persons.description,
-      voteCount: persons.voteCount,
-      timestamp : new Date(persons.timestamp)
+      voteCount: persons.voteCount
     })
 
-    // vote
-    //   $(function () {
-    //     $("i").click(function () {
-    //       $("i,span").toggleClass("press", 1000);
-    //     });
-    //   });
-    // }
     renderProduct();
     $("#loading-bar-spinner").hide();
   }
 });
 
 
-
+// When user votes a candidate
 
 $("#body").on("click", ".voteBtn", async function (event) {
   $("#loading-bar-spinner").show();
   console.log("Just Clicked The vote Button")
 
 
-
-  // const dataIndex = event.target.id
   dataIndex = CandidateArray.length
 
 
   await contractCall('vote', [dataIndex], 0)
 
 
-  
-  // $("#votes").load(window.location.href + " #votes");
   location.reload(true)
   
   
@@ -223,6 +200,8 @@ $("#body").on("click", ".voteBtn", async function (event) {
   $("#loading-bar-spinner").hide();
 });
 
+//  When uset registers a candidate
+
 $('.regBtn').click(async function(){
   $("#loading-bar-spinner").show();
   console.log("Button Clicked")
@@ -231,10 +210,14 @@ $('.regBtn').click(async function(){
   const candidate_image2 = ($("#Candidateimage2").val());
   const candidate_image3 = ($("#Candidateimage3").val());
   const candidate_description = ($("#Candidatemessage").val());
-  
+  console.log("-------------------------------------")
+  console.log("Name:",candidate_name)
+  console.log("image1:",candidate_image1)
+  console.log("Image2:",candidate_image2)
+  console.log("Image3:",candidate_image3)
 
   const new_candidate = await contractCall('createCandidate', [candidate_image1, candidate_image2, candidate_image3,candidate_name,candidate_description],40000);
-
+  console.log("Sucessfull registered", new_candidate)
 
   CandidateArray.push({
     id: new_candidate.id,
@@ -244,16 +227,12 @@ $('.regBtn').click(async function(){
 
     name: new_candidate.name,
     description: new_candidate.description,
-    voteCount: new_candidate.voteCount,
-    timestamp : new Date(new_candidate.timestamp)
+    voteCount: new_candidate.voteCount
   })
-  
-  console.log("registered successfully")
 
 
-  renderProductList();
+  renderProduct();
   
-   
 
   $("#loading-bar-spinner").hide();
   location.reload(true)
