@@ -11,8 +11,7 @@ contract UniVote =
     name : string,
     description : string,
     amount : int,
-    voteCount : int,
-    timestamp : int
+    voteCount : int
     }
     
   record state = {
@@ -43,7 +42,6 @@ contract UniVote =
       name = name', 
       description = description',
       amount = 40000,
-      timestamp = timestamp,
       voteCount = 0
       
       }
@@ -55,20 +53,17 @@ contract UniVote =
     put(state{candidates[index] = candidateReg, candidateLength = index})
     
     
-    //returns lenght of candidates registered
+                                  //returns lenght of candidates registered
+ 
   entrypoint getCandidateLength() : int = 
     state.candidateLength
     
-  //returns number of votes
+                                  //returns number of votes
     
   entrypoint getVoteCount(index : int) = 
     state.candidates[index].voteCount 
     
-    //vote a candidate
-    
-  entrypoint getId(index : int) = 
-      state.candidates[index].id
-      
+                                  //vote a candidate
       
   stateful entrypoint vote(index : int) = 
     let person = getCandidate(index)
@@ -81,7 +76,6 @@ contract UniVote =
       name = person.name, 
       description = person.description,
       amount = 40000,
-      timestamp = person.timestamp,
       voteCount = person.voteCount+1
       
     
@@ -92,4 +86,4 @@ contract UniVote =
     put(state{candidates[index] = votePerson})
   
     
-    "LIfe Hack has BEEN voted SUCCESSFULLY"
+    "VOTED SUCCESSFULLY"
