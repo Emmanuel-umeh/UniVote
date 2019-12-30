@@ -147,6 +147,7 @@ async function contractCall(func, args, value) {
 // reading from the blockchain and rendering it
 
 window.addEventListener('load', async () => {
+  $('.registerForm').hide()
   $("#loading-bar-spinner").show();
 
   client = await Ae.Aepp()
@@ -189,16 +190,22 @@ $("#body").on("click", ".voteBtn", async function (event) {
   await contractCall('vote', [dataIndex], 0)
 
 
-  location.reload(true)
-  
-  
-
-  
-
-
+  // location.reload(true)
   renderProduct();
   $("#loading-bar-spinner").hide();
 });
+
+
+
+$('.registerLink').click(function(
+
+){
+  console.log('nav bar clicked')
+
+  $('#about').hide()
+  $('#body').hide()
+  $('.registerForm').show()
+})
 
 //  When uset registers a candidate
 
