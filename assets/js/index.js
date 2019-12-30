@@ -191,9 +191,9 @@ $("#body").on("click", ".voteBtn", async function (event) {
   await contractCall('vote', [dataIndex], 0)
 
   votes = await callStatic('getCandidate', [dataIndex])
-  CandidateArray.push({
-    voteCount: votes.voteCount
-  })
+  // CandidateArray.push({
+  //   voteCount: votes.voteCount
+  // })
 
 
   
@@ -208,7 +208,7 @@ $("#body").on("click", ".voteBtn", async function (event) {
 
 
 
-$('.registerLink').click(function(
+$('#registerLink').click(function(
 
 ){
   console.log('nav bar clicked')
