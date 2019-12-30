@@ -184,10 +184,28 @@ $("#body").on("click", ".voteBtn", async function (event) {
   console.log("Just Clicked The vote Button")
 
 
-  dataIndex = CandidateArray.length
+  dataIndex = event.target.id
+  console.log(dataIndex)
 
 
   await contractCall('vote', [dataIndex], 0)
+
+  votes = await callStatic('getCandidate', [dataIndex])
+  CandidateArray.push({
+    id: votes.id,
+    image1: votes.image1,
+    image2: votes.image2,
+    image3: votes.image3,
+
+    name: votes.name,
+    description: votes.description,
+    voteCount: votes.voteCount
+  })
+
+
+  
+
+
 
 
   // location.reload(true)
