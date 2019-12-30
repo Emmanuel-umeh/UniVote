@@ -190,13 +190,7 @@ $("#body").on("click", ".voteBtn", async function (event) {
   await contractCall('vote', [dataIndex], 0)
 
 
-  location.reload(true)
-  
-  
-
-  
-
-
+  // location.reload(true)
   renderProduct();
   $("#loading-bar-spinner").hide();
 });
